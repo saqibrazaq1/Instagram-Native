@@ -11,7 +11,6 @@ const PostMain = ({ postData }) => {
   const getPoster = async () => {
     const getUserRef = doc(database, "users", postData.userId);
     const respo = await getDoc(getUserRef);
-    console.log(respo.data(), "respo");
     setPostUser(respo.data());
   };
   useEffect(() => {

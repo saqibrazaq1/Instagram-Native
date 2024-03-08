@@ -31,21 +31,21 @@ const CameraModal = ({
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [stepUp, setstepUp] = useState(1);
-const [isSending,setIsSending]=useState(false)
- 
-const cameraOpened = async () => {
+  const [isSending, setIsSending] = useState(false);
+
+  const cameraOpened = async () => {
     const respContent = await openCamera();
     if (respContent) dispatch(addNewPost(respContent));
-    console.log(respContent)
+    console.log(respContent);
   };
 
   const navigation = useNavigation();
 
   const content = useSelector((state) => state.post?.data);
-  const loggedUser=useSelector((state)=>state.auth.currentUser)
+  const loggedUser = useSelector((state) => state.auth.currentUser);
 
   const sendPost = async () => {
-    setIsSending(true)
+    setIsSending(true);
 
     const uploadTasks = [];
     for (const imageUrl of content) {
@@ -60,12 +60,12 @@ const cameraOpened = async () => {
       likes: 0,
       address: location,
       description: description,
-      userId:loggedUser?.userId,
+      userId: loggedUser?.userId,
     };
     await addDoc(collection(database, "post"), postData);
     setDescription("");
     setLocation("");
-    setIsSending(false)
+    setIsSending(false);
     setModalVisible(false);
   };
 
@@ -82,7 +82,6 @@ const cameraOpened = async () => {
     } catch (error) {
       console.error("Error uploading image:", error);
       throw error;
-
     }
   };
 
@@ -140,8 +139,7 @@ const cameraOpened = async () => {
 
             <View>
               <Button mode="elevated" onPress={handleNextstepUp}>
-                {" "}
-                Next{" "}
+                Next
               </Button>
             </View>
           </View>

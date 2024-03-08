@@ -8,12 +8,13 @@ import Signup from "../screens/Signup";
 import Login from "../screens/Login";
 import Dashboard from "../screens/Dashboard";
 import ProfileScreen from "../screens/ProfileScreen"
-import { Button } from "react-native-paper";
+import UsersPosts from "../screens/ProfileScreen/UsersPosts";
+import EditProfile from "../screens/ProfileScreen/EditProfile/EditingProfile";
 const Stack = createNativeStackNavigator();
 const Route = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='profile'>
+      <Stack.Navigator initialRouteName='login'>
         <Stack.Screen
           name='login'
           component={Login}
@@ -32,6 +33,16 @@ const Route = () => {
         <Stack.Screen
           name='profile'
           component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='userposts'
+          component={UsersPosts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='editprofile'
+          component={EditProfile}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
