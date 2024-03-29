@@ -5,14 +5,15 @@ import CardBar from "./CardBar";
 import PostMain from "./postmain";
 import CameraModal from "../../components/CameraModal";
 import { useDispatch, useSelector } from "react-redux";
-import {  getUserPosts } from "../../../redux/Services/firebaseActions";
-
+import {
+  getAllPosts,
+  getUserPosts,
+} from "../../../redux/Services/firebaseActions";
 let headerHeight = 200;
+
 const HomeScreen = ({}) => {
-  const posts = useSelector((state) => state.frposts.firebasePostsData);
- 
-  // console.log(posts, "post");
   const dispatch = useDispatch();
+  const posts = useSelector((state) => state.users.usersData);
 
   const scrollYClamped = useRef(new Animated.Value(0)).current;
   const translateY = scrollYClamped.interpolate({
@@ -22,8 +23,11 @@ const HomeScreen = ({}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   React.useEffect(() => {
     dispatch(getUserPosts());
+    getAllPosts();
   }, []);
-  // console.log(posts, "current user");
+  React.useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
 
   return (
     <>

@@ -1,8 +1,20 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as React from "react";
 import { Avatar, IconButton } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const PostHeader = (props) => {
+  const navigation = useNavigation();
+
+  const navigateToProfile = (userData) => {
+    navigation.navigate("userProfile", { userData });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.nameCity}>
@@ -15,7 +27,11 @@ const PostHeader = (props) => {
           }}
         />
         <View>
-          <Text style={styles.name}>{props.postBy?.name}</Text>
+          <Pressable
+            onPress={() => navigateToProfile(props.postBy)}
+          >
+            <Text style={styles.name}>{props.postBy?.name}</Text>
+          </Pressable>
           <Text style={styles.city}>{props.postContent?.address}</Text>
         </View>
       </View>

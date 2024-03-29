@@ -1,28 +1,20 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  Appbar,
-  Avatar,
-  Divider,
-  Icon,
-  Switch,
-  TextInput,
-} from "react-native-paper";
+import { Appbar, Avatar, Divider, Icon, Switch } from "react-native-paper";
 import { useSelector } from "react-redux";
-import CardBar from "../../HomeScreen/CardBar";
 import EditingTextInputs from "../../../components/EditingTextInputs";
 import { database } from "../../../../firebase/firebaseConfig";
-import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
-const EditingProfile = ({ label, value, placeholder, onChangeText }) => {
+const EditingProfile = () => {
   const navigation = useNavigation();
-  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   const currentUser = useSelector((state) => state.auth.currentUser);
-  // console.log(currentUser, "edit profile currentuser");
-  const [updateName, setUpdateName] = useState({ name: "" });
+
+  const [updateName, setUpdateName] = useState("");
   const [updateUser, setUpdateUser] = useState({
     username: "",
     email: "",
@@ -37,45 +29,33 @@ const EditingProfile = ({ label, value, placeholder, onChangeText }) => {
       const docSnapshot = await getDoc(userDocRef);
       if (docSnapshot.exists()) {
         const userData = docSnapshot.data();
-        setUpdateName({ name: userData.name });
-        setUpdateUser({
-          username: userData.username,
-          email: userData.email,
-          bio: userData.bio,
-          age: userData.age,
-          gender: userData.gender,
-        });
+        setUpdateName(userData.name);
+        setUpdateUser(userData);
       }
     };
 
     fetchData();
-  }, [currentUser, updateName, updateUser]);
+  }, [currentUser]);
 
   const handleEdits = async () => {
     try {
       const userDocRef = doc(database, "users", currentUser?.userId);
 
-      const docSnapshot = await getDoc(userDocRef);
-
-      if (docSnapshot.exists()) {
-        await updateDoc(userDocRef, {
-          ...docSnapshot.data(),
-          ...updateName,
-          ...updateUser,
-        });
-      } else {
-        await setDoc(userDocRef, {
-          ...updateName,
-          ...updateUser,
-        });
+      if (updateUser.username.trim() === "") {
+        throw new Error("Username cannot be empty");
       }
+
+      await updateDoc(userDocRef, {
+        ...updateUser,
+        name: updateName,
+      });
+
       navigation.goBack();
-      console.log(updateName, "update name");
-      console.log(updateUser, "update user");
     } catch (error) {
       console.error("Error updating user:", error);
     }
   };
+
   return (
     <>
       <View style={{ backgroundColor: "white" }}>
@@ -106,60 +86,44 @@ const EditingProfile = ({ label, value, placeholder, onChangeText }) => {
             </View>
           </Pressable>
           <Text style={{ fontSize: 14, marginTop: 7 }}>
-            Edit PIcture Or Avatar
+            Edit Picture or Avatar
           </Text>
         </View>
         <View>
-          <View>
-            <EditingTextInputs
-              label={"Name"}
-              value={updateName?.name}
-              placeholder={"Name"}
-              onChangeText={(text) =>
-                setUpdateName({ ...updateName, name: text })
-              }
-            />
-          </View>
-          <View>
-            <EditingTextInputs
-              label={"Bio"}
-              value={updateUser?.bio}
-              placeholder={"Bio"}
-              onChangeText={(text) =>
-                setUpdateUser({ ...updateUser, bio: text })
-              }
-            />
-          </View>
-          <View>
-            <EditingTextInputs
-              label={"username"}
-              value={updateUser?.username}
-              placeholder={"UserName"}
-              onChangeText={(text) =>
-                setUpdateUser({ ...updateUser, username: text })
-              }
-            />
-          </View>
-          <View>
-            <EditingTextInputs
-              label={"Age"}
-              value={updateUser?.age}
-              placeholder={"Age"}
-              onChangeText={(text) =>
-                setUpdateUser({ ...updateUser, age: text })
-              }
-            />
-          </View>
-          <View>
-            <EditingTextInputs
-              label={"Gender"}
-              value={updateUser?.gender}
-              placeholder={"Gender"}
-              onChangeText={(text) =>
-                setUpdateUser({ ...updateUser, gender: text })
-              }
-            />
-          </View>
+          <EditingTextInputs
+            label={"Name"}
+            value={updateName}
+            placeholder={"Name"}
+            onChangeText={(text) => setUpdateName(text)}
+          />
+          <EditingTextInputs
+            label={"Bio"}
+            value={updateUser.bio}
+            placeholder={"Bio"}
+            onChangeText={(text) => setUpdateUser({ ...updateUser, bio: text })}
+          />
+          <EditingTextInputs
+            label={"username"}
+            value={updateUser.username}
+            placeholder={"UserName"}
+            onChangeText={(text) =>
+              setUpdateUser({ ...updateUser, username: text })
+            }
+          />
+          <EditingTextInputs
+            label={"Age"}
+            value={updateUser.age}
+            placeholder={"Age"}
+            onChangeText={(text) => setUpdateUser({ ...updateUser, age: text })}
+          />
+          <EditingTextInputs
+            label={"Gender"}
+            value={updateUser.gender}
+            placeholder={"Gender"}
+            onChangeText={(text) =>
+              setUpdateUser({ ...updateUser, gender: text })
+            }
+          />
         </View>
         <View
           style={{

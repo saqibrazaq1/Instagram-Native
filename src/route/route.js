@@ -1,5 +1,3 @@
-/** @format */
-
 import { StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,43 +5,55 @@ import React from "react";
 import Signup from "../screens/Signup";
 import Login from "../screens/Login";
 import Dashboard from "../screens/Dashboard";
-import ProfileScreen from "../screens/ProfileScreen"
+import ProfileScreen from "../screens/ProfileScreen";
 import UsersPosts from "../screens/ProfileScreen/UsersPosts";
 import EditProfile from "../screens/ProfileScreen/EditProfile/EditingProfile";
+import UserProfile from "../screens/UserProfileScreen/Index";
+import FollowingNavigation from "../screens/FolowingAndFollowers";
 const Stack = createNativeStackNavigator();
 const Route = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='login'>
+      <Stack.Navigator initialRouteName="login">
         <Stack.Screen
-          name='login'
+          name="login"
           component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='signup'
+          name="signup"
           component={Signup}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='dashboard'
+          name="dashboard"
           component={Dashboard}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='profile'
+          name="profile"
           component={ProfileScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='userposts'
+          name="userposts"
           component={UsersPosts}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='editprofile'
+          name="editprofile"
           component={EditProfile}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="userProfile"
+          component={UserProfile}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="followingNavigation"
+        component={FollowingNavigation}
+        options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

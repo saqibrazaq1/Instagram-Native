@@ -22,7 +22,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { firebasePost, setPostsError } from "../Slices/postFirebase";
 import authSlice, { setCurrentUser } from "../Slices/authSlice";
 import { useSelector } from "react-redux";
-import { allUsersData } from "../Slices/usersSlice";
+import { allUsersData } from "../Slices/allusersposts";
 // import { onSnapshot } from "firebase/firestore";
 
 // Simple signup //
@@ -80,15 +80,12 @@ export const HandleSignIn =
 // getting posts from firebase  //
 export const getUserPosts = () => async (dispatch, getState) => {
   try {
-    const currentUser = getState().auth.currentUser; 
+    const currentUser = getState().auth.currentUser;
 
     if (!currentUser) {
-      // Handle case where user is not logged in
-      console.log("first");
       return;
     }
-    console.log(currentUser, "current user")
-    const userId = currentUser.userId; // Assuming userId is the field in currentUser
+    const userId = currentUser.userId;
     const postsRef = query(
       collection(database, "post"),
       where("userId", "==", userId)
@@ -103,18 +100,21 @@ export const getUserPosts = () => async (dispatch, getState) => {
     dispatch(setPostsError(error.message));
   }
 };
-//  get all users // 
+//  get all users //
 
-export const getAllUsers = () => async (dispatch) => {
+export const getAllPosts = () => async (dispatch) => {
   try {
-    const usersRef = collection(database, "users");
-    const querySnapshot = await getDocs(usersRef);
-    const allUsers = [];
+    const postsRef = collection(database, "post");
+    
+    const querySnapshot = await getDocs(postsRef);
+    const allPosts = [];
+    // console.log(querySnapshot , "allposts");
     querySnapshot.forEach((doc) => {
-      allUsers.push({...doc.data(), userId: doc.id });
+      allPosts.push({ ...doc.data(), postId: doc.id });
     });
-    dispatch(firebasePost(allUsersData));
+
+    dispatch(allUsersData(allPosts));
   } catch (error) {
-    dispatch(setPostsError(error.message));
+    console.log(error);
   }
 };
